@@ -1,0 +1,94 @@
+public class BankAccount {
+    protected double balance;
+
+    public BankAccount(double initialBalance) {
+        this.balance = initialBalance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: $" + amount);
+        } else {
+            System.out.println("Deposit amount must be positive.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrew: $" + amount);
+        } else if (amount > balance) {
+            System.out.println("Insufficient funds.");
+        } else {
+            System.out.println("Withdrawal amount must be positive.");
+        }
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+class SavingsAccount extends BankAccount {
+    private static final double WITHDRAWAL_LIMIT = 1000;
+
+    public SavingsAccount(double initialBalance) {
+        super(initialBalance);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > WITHDRAWAL_LIMIT) {
+            System.out.println("Withdrawal amount exceeds the limit of $" + WITHDRAWAL_LIMIT);
+        } else {
+            super.withdraw(amount);
+        }
+    }
+}
+
+class CheckingAccount extends BankAccount {
+    private static final double FEE = 2.50;
+
+    public CheckingAccount(double initialBalance) {
+        super(initialBalance);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (amount > 0 && amount + FEE <= balance) {
+            balance -= (amount + FEE);
+            System.out.println("Withdrew: $" + amount + " (Fee: $" + FEE + ")");
+        } else if (amount + FEE > balance) {
+            System.out.println("Insufficient funds to cover withdrawal and fee.");
+        } else {
+            System.out.println("Withdrawal amount must be positive.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        SavingsAccount savings = new SavingsAccount(2000);
+        CheckingAccount checking = new CheckingAccount(2000);
+
+        System.out.println("Initial Balances:");
+        System.out.println("Savings Account Balance: $" + savings.getBalance());
+        System.out.println("Checking Account Balance: $" + checking.getBalance());
+
+        System.out.println("\nSavings Account Transactions:");
+        savings.deposit(500);
+        savings.withdraw(300);
+        savings.withdraw(1500);
+
+        System.out.println("\nChecking Account Transactions:");
+        checking.deposit(500);
+        checking.withdraw(300);
+        checking.withdraw(2500);
+
+        System.out.println("\nFinal Balances:");
+        System.out.println("Savings Account Balance: $" + savings.getBalance());
+        System.out.println("Checking Account Balance: $" + checking.getBalance());
+    }
+}
+
